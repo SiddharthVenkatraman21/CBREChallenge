@@ -1,11 +1,16 @@
 # don't touch this pls
 
+import numpy as np
+import pandas as pd
+import json
+
+data = pd.read_csv('data.csv')
 # teams = ((<team number>, <number of members>, <list of preferred teams>, <list of tolerated teams>, <list of blacklisted teams>), ...)
 # floors = ((<floor number>, <capacity>), ...)
 
 def sort_teams(teams, floors):
     # Create a list for each floor to hold the assigned teams
-    floor_assignments = {floor[0]: [] for floor in floors}
+    floor_assignments = {floor[0]: [] for floor in floors} 
     # Sort teams by number of members in descending order
     teams = sorted(teams, key=lambda x: x[1], reverse=True)
 
@@ -16,9 +21,13 @@ def sort_teams(teams, floors):
         for floor in sorted(floors, key=lambda x: x[1], reverse=True):
             floor_name, floor_capacity = floor
             # Check if floor has enough capacity for current team
-            if floor_capacity >= team_size:
+            if floor_capacity >= team_size: # add check for remaining capacity
+
                 # Check if any blacklisted teams are already assigned to floor
-                if not any(b in floor_assignments[floor_name] for b in blacklisted):
+                if not any(b in floor_assignments[floor_name] for b in blacklisted): # checks if any of the teams on the floor is on the current team's blacklist
+                   
+                    # check to see if the current team is on any of the teams on the floor's blacklist
+
                     floor_assignments[floor_name].append(team_number)
                     assigned = True
                     # Try to add preferred teams to the same floor
