@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { Stage, Layer, Rect, Text, Circle, Line } from 'react-konva';
 import ReactCSSTransitionGroup from 'react-transition-group'; 
 import building from './building.png'
-
+import Typewriter from 'typewriter-effect'
 import Particles from "react-tsparticles";
 import { Component } from 'react';
 // import { Fade } from 'react-animation-components'
@@ -149,27 +149,53 @@ function Background() {
   );
 }
 
+class floorStatsUpdate extends Component{
+  state={
+    floor: this.props.floorNum
+  }
+  render(){
+    return(
+      document.getElementById('floorStats').innerHTML = "testing"
+    )
+  }
+}
+
 class Outline extends Component{
   state = {
-    img: "./Outline.png"
+    img: this.props.image1
+    
   }
   render(){
     console.log(this.state.img)
   return(
-    <div>
+    
+    <div className = "flexTest">
+      
       <img src={this.state.img} alt = "outline image" height = {600} width = {600} className="outlineImage"
       onMouseEnter={() => {
         this.setState({
-          img: "./outlineRed.png"
+          img: this.props.image2
         })
-      }}
 
+        let floorval = "Floor: " + this.props.floor + 
+        "<br>Team(s): " + this.props.teams + "<br>Population: " + this.props.Population + "<br>Floor Capacity: " + this.props.MaxCapacity
+        document.getElementById('floorStats').innerHTML = floorval
+       
+      }
+      }
+      
       onMouseOut={() => {
         this.setState({
-          img: "./Outline.png"
+          img: this.props.image1
         })
+      
+        
+        let genvar = "Teams Accomodated: 8/11 <br>Total Population: 336 <br>Total Capacity: 348 <br>Occupancy Level: 97%"
+        document.getElementById('floorStats').innerHTML = genvar
+        
       }}/>
       </div>
+      
   );
   }
 
@@ -181,10 +207,39 @@ function App() {
   
     return (
       <div>
+
+        
+
+
         <div className = "outlineDiv"> 
-          <Outline/>
+          <div className = "stack">
+            <Outline image1="./outline5.png" image2="./pic5new.png" floor="E" teams="6, 10" Population="93" MaxCapacity="97"/>
+            <Outline image1="./outline4.png" image2="./pic4new.png" floor="D" teams="4" Population="51" MaxCapacity="54"/>
+            <Outline image1="./outline3.png" image2="./pic1new.png" floor="C" teams="1, 11" Population="71" MaxCapacity="73"/>
+            <Outline image1="./outline2.png" image2="./pic2new.png" floor="B" teams="2, 3" Population="79" MaxCapacity="81"/>
+            <Outline image1="./outline1.png" image2="./pic3new.png" floor="A" teams="7" Population="43" MaxCapacity="45"/>
+            </div>
         </div>
+        
+
+
         <div className ="Bottom">
+          <div className="typeWriterText">
+            <Typewriter
+              onInit={(typewriter) => {
+                typewriter.typeString("CBRE Team Distribution").start()
+
+              }}
+              />
+          </div>
+          <div className="floorStats" id="floorStats">
+          <Typewriter
+              onInit={(typewriter) => {
+                typewriter.typeString("Teams Accomodated: 8/11 <br></br>Total Population: 336 <br></br>Total Capacity: 348 <br></br>Occupancy Level: 97%").pauseFor(3000).start()
+              }}
+              />
+            
+          </div>
           
         </div>
       </div>

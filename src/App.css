@@ -25,6 +25,12 @@
   color: white;
 }
 
+.video{
+  position:fixed;
+  z-index:-1;
+  width:100%;
+}
+
 .App-link {
   color:aliceblue;
 }
@@ -36,25 +42,76 @@
   
 }
 
+.typeWriterText{
+  background-color:#006BA6;
+  width:500px;
+  height: 80px;
+  font-size: 40px;
+  color:white;
+  font-weight:bold;
+  border:5px solid black;
+  line-height:80px;
+  position:relative;
+  top: 100px;
+  right: 20vh;
+  
+  
+  
+}
+
+.floorStats{
+  background-color:#006BA6;
+  width: 500px;
+  height: 300px;
+  border:5px solid black;
+  position:relative;
+  line-height: 60px;
+  left: 20vh;
+  top:50px;
+  font-size: 40px;
+  color:white;
+  font-weight:bold;
+}
+
 .outlineClass{
   position:relative;
   right:0;
 }
 
-
+.outlineImage{
+  height: 100px;
+  padding-top:0px;
+  padding-bottom:0px;
+}
 
 .outlineDiv{
-  background-color:lightblue;
+  /* background-color:#add8e6; */
   position: relative;
   text-align: center;
   height: 60vh;
+  border: 2px solid black;
+  background-image:url('./movingsky.gif')
+  
+}
+
+.stack{
+  padding-top:30px;
+  
+}
+
+.flexTest{
+  display:flex;
+  width: 100%;
+  justify-content: center;
 }
 
 .Bottom{
   background-color:skyblue;
-  position: relative;
+  display:flex;
   text-align: center;
   height: 40vh;
+  justify-content:center;
+  
 }
 
 @keyframes App-logo-spin {
