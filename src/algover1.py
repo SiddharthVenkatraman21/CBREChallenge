@@ -1,46 +1,62 @@
 # don't touch this pls
-import heapq
 
-# teams will be a list of tuples
-# team = (<team number>:[<prefered teams>], [<tolerated teams>], [<no way teams>], <team size>)
+import numpy as np
+import pandas as pd
+import json
 
-# floors will be a dictionary
-# floor = {<floor number>: <floor capacity>}
+data = pd.read_csv('data.csv')
+# teams = ((<team number>, <number of members>, <list of preferred teams>, <list of tolerated teams>, <list of blacklisted teams>), ...)
+# floors = ((<floor number>, <capacity>), ...)
 
-def sort_teams_into_floors(teams, floors):
-    # sort teams by number of members in descending order
-    teams = sorted(teams, key=lambda x: x[2], reverse=True)
-
-    # create priority queue for floors
-    # key is the available capacity, value is the floor number
-    floor_queue = [(floor[1], floor[0]) for floor in floors]
-    heapq.heapify(floor_queue)
-
-    # list to hold assigned teams
-    assigned_teams = []
+def sort_teams(teams, floors):
+    # Create a list for each floor to hold the assigned teams
+    floor_assignments = {floor[0]: [] for floor in floors} 
+    # Sort teams by number of members in descending order
+    teams = sorted(teams, key=lambda x: x[1], reverse=True)
 
     for team in teams:
-        # get the floor with highest available capacity from priority queue
-        available_floor = heapq.heappop(floor_queue)
-        floor_num, available_capacity = available_floor
+        team_number, team_size, preferred, tolerated, blacklisted = team
+        assigned = False
+        # Iterate through floors in descending order of capacity
+        for floor in sorted(floors, key=lambda x: x[1], reverse=True):
+            floor_name, floor_capacity = floor
+            # Check if floor has enough capacity for current team
+            if floor_capacity >= team_size: # add check for remaining capacity
 
-        # check if the capacity of the floor is more than 25%
-        if available_capacity >= 0.25 * floors[floor_num][1]:
-            # add team to the floor and update floor's available capacity
-            assigned_teams.append((team[0], floor_num))
-            available_capacity -= team[2]
-            heapq.heappush(floor_queue, (available_capacity, floor_num))
-        else:
-            # if no floor with more than 25% capacity is available, remove team from the list of teams
-            pass
+                # Check if any blacklisted teams are already assigned to floor
+                if not any(b in floor_assignments[floor_name] for b in blacklisted): # checks if any of the teams on the floor is on the current team's blacklist
+                   
+                    # check to see if the current team is on any of the teams on the floor's blacklist
 
-    # ensure that none of the floors are empty
+                    floor_assignments[floor_name].append(team_number)
+                    assigned = True
+                    # Try to add preferred teams to the same floor
+                    for p in preferred:
+                        if p in teams:
+                            p_team = [t for t in teams if t[0] == p][0]
+                            p_team_number, p_team_size, _, _, _ = p_team
+                            if floor_capacity >= team_size + p_team_size:
+                                floor_assignments[floor_name].append(p_team_number)
+                                teams.remove(p_team)
+                    break
+        # If team was not assigned to any floor, try to add them to tolerated teams floor
+        if not assigned:
+            for floor in floors:
+                floor_name, floor_capacity = floor
+                if any(t in floor_assignments[floor_name] for t in tolerated):
+                    if floor_capacity >= team_size:
+                        floor_assignments[floor_name].append(team_number)
+                        break
+
+    # Check if any floor is less than 25% full and try to move teams to underfilled floors
     for floor in floors:
-        floor_num = floor[0]
-        assigned_teams_on_floor = [t for t in assigned_teams if t[1] == floor_num]
-        if len(assigned_teams_on_floor) == 0:
-            team_to_move = sorted(assigned_teams, key=lambda x: x[1])[0]
-            assigned_teams.remove(team_to_move)
-            assigned_teams.append((team_to_move[0], floor_num))
+        floor_name, floor_capacity = floor
+        while len(floor_assignments[floor_name]) / floor_capacity < 0.25:
+            for other_floor in floors:
+                if other_floor[0] != floor_name and len(floor_assignments[other_floor[0]]) / other_floor[1] > 0.25:
+                    team_to_move = floor_assignments[other_floor[0]][-1]
+                    floor_assignments[other_floor[0]].remove(team_to_move)
+                    floor_assignments[floor_name].append(team_to_move)
+                    break
 
-    return assigned_teams
+    return floor_assignments
