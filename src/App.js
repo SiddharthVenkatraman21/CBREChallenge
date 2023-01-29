@@ -215,9 +215,9 @@ function App() {
           <div className = "stack">
             <Outline image1="./outline5.png" image2="./pic5new.png" floor="E" teams="6, 10" Population="93" MaxCapacity="97"/>
             <Outline image1="./outline4.png" image2="./pic4new.png" floor="D" teams="4" Population="51" MaxCapacity="54"/>
-            <Outline image1="./outline3.png" image2="./pic1new.png" floor="C" teams="1, 11" Population="71" MaxCapacity="73"/>
-            <Outline image1="./outline2.png" image2="./pic2new.png" floor="B" teams="2, 3" Population="79" MaxCapacity="81"/>
-            <Outline image1="./outline1.png" image2="./pic3new.png" floor="A" teams="7" Population="43" MaxCapacity="45"/>
+            <Outline image1="./build3.png" image2="./pic1new.png" floor="C" teams="1, 11" Population="71" MaxCapacity="73"/>
+            <Outline image1="./build2.png" image2="./pic2new.png" floor="B" teams="2, 3" Population="79" MaxCapacity="81"/>
+            <Outline image1="./build1.png" image2="./pic3new.png" floor="A" teams="7" Population="43" MaxCapacity="45"/>
             </div>
         </div>
         
